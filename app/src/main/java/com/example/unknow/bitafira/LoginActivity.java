@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -21,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -115,8 +117,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                         startActivity(intent);
                                     } else {
-                                        Toast.makeText(getApplicationContext(), "Fallo al ingresar intente ne nuevo por favor",
-                                                Toast.LENGTH_LONG).show();
+                                        Toast toast = Toast.makeText(getApplication(),"Fallo al ingresar intente de nuevo por favor.",
+                                                Toast.LENGTH_LONG);
+                                        toast.setGravity(Gravity.CENTER, 0, 0);
+                                        toast.show();
                                     }
                                 }
                             });

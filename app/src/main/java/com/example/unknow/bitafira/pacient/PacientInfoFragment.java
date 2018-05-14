@@ -2,7 +2,6 @@ package com.example.unknow.bitafira.pacient;
 
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -14,15 +13,16 @@ import android.widget.TextView;
 import com.example.unknow.bitafira.R;
 import com.example.unknow.bitafira.model.Evaluation;
 import com.example.unknow.bitafira.model.Pacient;
-//import com.github.clans.fab.FloatingActionButton;
-//import com.github.clans.fab.FloatingActionMenu;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
 public class PacientInfoFragment extends Fragment {
 
-//    FloatingActionMenu materialDesignFAM;
+    FloatingActionMenu materialDesignFAM;
     FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
     private Pacient pacient;
     private TextView  phoneRefe, full, address, phone, email, rol, historial ;
@@ -41,17 +41,17 @@ public class PacientInfoFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         t = this.getFragmentManager().beginTransaction();
-//        materialDesignFAM = (FloatingActionMenu) view.findViewById(R.id.material_design_android_floating_action_menu);
-        floatingActionButton1 = (FloatingActionButton)  view.findViewById(R.id.material_design_floating_action_menu_item1);
+        materialDesignFAM = (FloatingActionMenu) view.findViewById(R.id.material_design_android_floating_action_menu);
+
         floatingActionButton2 = (FloatingActionButton)  view.findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton3 = (FloatingActionButton)  view.findViewById(R.id.material_design_floating_action_menu_item3);
 
-        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //TODO something when floating action menu first item clicked
-
-            }
-        });
+//        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                //TODO something when floating action menu first item clicked
+//
+//            }
+//        });
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked

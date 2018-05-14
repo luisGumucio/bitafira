@@ -96,14 +96,12 @@ public class BitalinoService extends Service {
             bitalino.open(sock.getInputStream(), sock.getOutputStream());
             createFile(id, idPacient);
             startCronometer(idPacient);
-
         } catch (Exception e) {
             new AlertDialog.Builder(UPDATE_LISTENER.getContext())
                     .setTitle("Error")
                     .setMessage("Fallo al conectar con el bitalino")
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
-            stopSelf();
         }
     }
 
@@ -206,7 +204,9 @@ public class BitalinoService extends Service {
     @Override
     public void onDestroy() {
         try {
-            bitalino.stop();
+            if(bitalino != null) {
+                bitalino.stop();
+            }
             stopSelf();
         } catch (BITalinoException e) {
             e.printStackTrace();

@@ -96,9 +96,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
 
         Menu menu = navView.getMenu();
-//        menu.add(Menu.NONE, MENU_ADMIN_CONFIGURATION, Menu.NONE, "Configuration Bitalino").setIcon(R.drawable.tools);
-//        menu.add(Menu.NONE, MENU_ADMIN_SHOW_EVALUACION, Menu.NONE, "Mostrar evaluacion").setIcon(R.drawable.evaluation);
-        menu.add(Menu.NONE, MENU_ADMIN_CERRAR_SESSION, Menu.NONE, "Cerrar session").setIcon(R.drawable.exit);
+//        menu.add(Menu.NONE, MENU_ADMIN_CONFIGURATION, Menu.NONE, "Configuración Bitalino").setIcon(R.drawable.tools);
+//        menu.add(Menu.NONE, MENU_ADMIN_SHOW_EVALUACION, Menu.NONE, "Mostrar evaluación").setIcon(R.drawable.evaluation);
+        menu.add(Menu.NONE, MENU_ADMIN_CERRAR_SESSION, Menu.NONE, "Cerrar sesión").setIcon(R.drawable.exit);
         navView.invalidate();
     }
 
@@ -106,9 +106,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
 
         Menu menu = navView.getMenu();
-        menu.add(Menu.NONE, MENU_ADMIN_CONFIGURATION, Menu.NONE, "Configuration Bitalino").setIcon(R.drawable.tools);
-        menu.add(Menu.NONE, MENU_ADMIN_SHOW_EVALUACION, Menu.NONE, "Mostrar evaluacion").setIcon(R.drawable.evaluation);
-        menu.add(Menu.NONE, MENU_ADMIN_CERRAR_SESSION, Menu.NONE, "Cerrar session").setIcon(R.drawable.exit);
+        menu.add(Menu.NONE, MENU_ADMIN_CONFIGURATION, Menu.NONE, "Configuración Bitalino").setIcon(R.drawable.tools);
+        menu.add(Menu.NONE, MENU_ADMIN_SHOW_EVALUACION, Menu.NONE, "Mostrar evaluación").setIcon(R.drawable.evaluation);
+        menu.add(Menu.NONE, MENU_ADMIN_CERRAR_SESSION, Menu.NONE, "Cerrar sesión").setIcon(R.drawable.exit);
         navView.invalidate();
     }
 
@@ -176,10 +176,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }

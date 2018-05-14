@@ -46,7 +46,7 @@
                     android:id="@+id/input_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_name"
+                    android:hint="Nombre(s)"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
@@ -149,7 +149,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorOrange"
-                    android:text="Información Clinico"
+                    android:text="Información Clínica"
                 android:textSize="20dp"
                 android:textColor="#ffff"/>
 
@@ -162,7 +162,7 @@
                     android:id="@+id/input_number_history"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nro de historial clinico"
+                    android:hint="Nro de historial Clínico"
                     android:inputType="number"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
