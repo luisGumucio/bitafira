@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "217778137158",
+    "firebase_url": "https://bitalino-test.firebaseio.com",
+    "project_id": "bitalino-test",
+    "storage_bucket": "bitalino-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217778137158:android:cd8f91df7fb05b8f",
+        "android_client_info": {
+          "package_name": "com.example.unknow.bitafira"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "217778137158-qrfn1g5ldmvb91jtv5537e7glkha307r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQv5nPFxojdrzbGl9R8jCTe7ND4lCbydY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

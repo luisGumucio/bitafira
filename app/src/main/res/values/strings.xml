@@ -1,0 +1,75 @@
+<resources>
+    <string name="app_name">Bitafira</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_login2">Sign in 2</string>
+    <string name="title_activity_login3">Sign in 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    //save
+    <string name="hint_name">Nombre</string>
+    <string name="hint_last_name">Apellidos</string>
+    <string name="hint_number_history">Nro Historial Clinica</string>
+    <string name="hint_age">Edad</string>
+    <string name="hint_weight">Peso</string>
+    <string name="hint_height">Altura</string>
+    <string name="hint_phone">Telefono</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_address">Direccion</string>
+    <string name="hint_user">Usuario</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_save">Guardar</string>
+    <string name="err_msg_name">Enter your full name</string>
+    <string name="err_msg_email">Enter valid email address</string>
+    <string name="err_msg_password">Enter the password</string>
+
+    <!--bitalino-->
+    <string name="label_bitalino_mac_address">BITalino MAC Address</string>
+    <string name="button_connect">Connect</string>
+    <string name="label_port_1">Analog 1</string>
+    <string name="label_port_2">Analog 2</string>
+    <string name="label_port_3">Analog 3</string>
+    <string name="label_port_4">Analog 4</string>
+    <string name="label_port_5">Analog 5</string>
+    <string name="label_port_6">Analog 6</string>
+    <string name="port_none">Select sensor</string>
+    <string name="port_ecg">ECG</string>
+    <string name="port_emg">EMG</string>
+    <string name="port_eda">EDA</string>
+    <string name="port_lux">Luminosity</string>
+    <string name="port_acc">Accelerometer</string>
+    <string name="title_activity_values">ValuesActivity</string>
+    <string name="button_stop_reading_values">Stop</string>
+    <string name="label_port_title">Port %1$d</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label_port_description">Port type: %1$s (%2$s)</string>
+    <string name="ecg_unit">mV</string>
+    <string name="emg_unit">mV</string>
+    <string name="eda_unit">µS</string>
+    <string name="none_unit" />
+    <string name="lux_unit">%</string>
+    <string name="acc_unit">g</string>
+    <string name="label_domain">Time (s)</string>
+    <string name="label_ok">OK</string>
+    <string name="message_no_ports">No ports configured</string>
+    <string name="message_stop_readings">Do you want to stop the readings?</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+
+    <string name="hint_minute">Minutos</string>
+    <string name="message_minutes">Por favor ingrese minutos...</string>
+</resources>
