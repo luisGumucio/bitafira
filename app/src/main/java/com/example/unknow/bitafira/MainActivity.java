@@ -1,6 +1,7 @@
 package com.example.unknow.bitafira;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -144,16 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         role.setText(pacient.getRole());
 
         Bundle bundle=new Bundle();
-        bundle.putString("PACIENT_ID", pacient.getId());
-        bundle.putString("PACIENT_NAME", pacient.getName() );
-        bundle.putString("PACIENT_LASTNAME", pacient.getLastName() );
-        bundle.putInt("PACIENT_EDAD", pacient.getAge() );
-        bundle.putInt("PACIENT_PHONE", pacient.getPhone());
-        bundle.putInt("PACIENT_PHONE_REFE", pacient.getPhoneRefe());
-        bundle.putString("PACIENT_EMAIL", pacient.getEmail() );
-        bundle.putString("PACIENT_DIRECCION", pacient.getAddress() );
-        bundle.putString("PACIENT_ROL", pacient.getRole());
-        bundle.putInt("PACIENT_HISTORIAL", pacient.getNumberHistory());
+        bundle.putSerializable("PACIENT", pacient);
         Fragment mFrag = new PacientMainFragment();
         mFrag.setArguments(bundle);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

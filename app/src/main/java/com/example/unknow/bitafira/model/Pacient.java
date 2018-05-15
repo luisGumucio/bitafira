@@ -3,8 +3,10 @@ package com.example.unknow.bitafira.model;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
+
 @IgnoreExtraProperties
-public class Pacient {
+public class Pacient implements Serializable {
 
     private String id;
     private String name;
@@ -19,6 +21,7 @@ public class Pacient {
     private int phoneRefe;
     private String userId;
     private String role;
+    private String sexo;
 
     public Pacient() {
 
@@ -126,6 +129,14 @@ public class Pacient {
 
     public void setPhoneRefe(int phoneRefe) {
         this.phoneRefe = phoneRefe;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
     }
 }
 

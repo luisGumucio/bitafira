@@ -61,6 +61,9 @@ public class PacientMainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Fragment mFrag = new PacientSaveFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("PACIENT", pacient);
+                mFrag.setArguments(bundle);
                 t.replace(R.id.main_fragment, mFrag).addToBackStack(null);
                 t.commit();
             }
@@ -76,9 +79,7 @@ public class PacientMainFragment extends Fragment {
     }
 
     private void loadDataAdmin() {
-        pacient = new Pacient();
-        pacient.setId(getArguments().getString("PACIENT_ID"));
-        pacient.setRole(getArguments().getString("PACIENT_ROL"));
+        pacient = (Pacient) getArguments().getSerializable("PACIENT");
         if(pacient.getRole().equals("Doctor")) {
             btnAgregar.setVisibility(View.INVISIBLE);
             listPacients.setOnItemClickListener(itemClickListenerAdminDoctor);

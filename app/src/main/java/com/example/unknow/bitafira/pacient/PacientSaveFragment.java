@@ -56,12 +56,14 @@ public class PacientSaveFragment extends Fragment {
     EditText txtNacimiento;
     EditText txtPassword;
     EditText txtRoles;
-    EditText txtPhoneRefe;
+    EditText txtPhoneRefe, txtSexo;
     Button btnAgregar;
     FragmentTransaction t;
     FirebaseAuth mAuth;
+    Pacient pacient;
     private BackButtonHandlerInterface backButtonHandler;
     CharSequence roles[] = new CharSequence[] {"Paciente", "Doctor", "Técnico"};
+    CharSequence sexo[] = new CharSequence[] {"Masculino", "Femenino"};
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_pacient_save, parent, false);
@@ -84,6 +86,8 @@ public class PacientSaveFragment extends Fragment {
         txtPhone = (EditText) view.findViewById(R.id.input_phone);
         txtPhoneRefe = (EditText) view.findViewById(R.id.input_phone1);
         txtPassword = (EditText) view.findViewById(R.id.input_password);
+        txtSexo = (EditText) view.findViewById(R.id.input_sexo);
+        txtSexo.setOnClickListener(putSexo);
         txtRoles = (EditText) view.findViewById(R.id.input_roles);
         txtRoles.setOnClickListener(putRoles);
         txtNacimiento = (EditText) view.findViewById(R.id.input_nacimiento);
@@ -95,6 +99,7 @@ public class PacientSaveFragment extends Fragment {
         mRefPacient = mDatabase.getReference(Constante.contacto);
         t = this.getFragmentManager().beginTransaction();//apuntamos con que nodo vamos a trabajar
         mAuth = FirebaseAuth.getInstance();
+        pacient = (Pacient) getArguments().getSerializable("PACIENT");
     }
 
 
@@ -108,6 +113,22 @@ public class PacientSaveFragment extends Fragment {
                 public void onClick(DialogInterface dialog, int which) {
                     // the user clicked on colors[which]
                     txtRoles.setText(roles[which]);
+                }
+            });
+            builder.show();
+        }
+    };
+
+    private View.OnClickListener putSexo = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Seleccione un sexo por favor!");
+            builder.setItems(sexo, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // the user clicked on colors[which]
+                    txtSexo.setText(sexo[which]);
                 }
             });
             builder.show();
@@ -154,7 +175,10 @@ public class PacientSaveFragment extends Fragment {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()) {
                         mRefPacient.child(pacient.getId()).setValue(pacient);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("PACIENT", pacient);
                         android.support.v4.app.Fragment mFrag = new PacientMainFragment();
+                        mFrag.setArguments(bundle);
                         t.replace(R.id.main_fragment, mFrag);
                         t.commit();
                     } else {
@@ -180,6 +204,7 @@ public class PacientSaveFragment extends Fragment {
         pacient.setPhone(Integer.parseInt(txtPhone.getText().toString()));
         pacient.setUserId(id);
         pacient.setRole(txtRoles.getText().toString());
+        pacient.setSexo(txtSexo.getText().toString());
         pacient.setPhoneRefe(Integer.parseInt(txtPhoneRefe.getText().toString()));
 
         return pacient;
