@@ -1,5 +1,6 @@
 package com.example.unknow.bitafira;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -71,6 +72,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mPacients = mDatabase.getReference(Constante.contacto);
         Query query = mPacients.orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
 
+        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Cargando espere por favor...");
+        progressDialog.show();
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -80,16 +86,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (pacient.getRole().equals("Técnico") || pacient.getRole().equals("Doctor")) {
                         loadMenuAdmin();
                         initAdmin();
+                        progressDialog.dismiss();
                     } else {
                         loadMenuPacient();
                         initPacient();
+                        progressDialog.dismiss();
                     }
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                progressDialog.dismiss();
             }
         });
     }
