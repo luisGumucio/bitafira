@@ -1,6 +1,7 @@
 package com.example.unknow.bitafira.pacient;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -17,6 +18,8 @@ import android.widget.EditText;
 import com.bitalino.comm.BITalinoFrame;
 import com.example.unknow.bitafira.LoginActivity;
 import com.example.unknow.bitafira.R;
+import com.example.unknow.bitafira.service.BitafiraService;
+import com.example.unknow.bitafira.service.BitalinoService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +31,6 @@ import java.util.concurrent.TimeUnit;
 
 public class PacientBitalinoFragment extends Fragment {
 
-    public StoreLooperThread looperThread;
     private EditText txtTime;
     private Button btStart;
     private CountDownTimer countDownTimer;
@@ -49,77 +51,28 @@ public class PacientBitalinoFragment extends Fragment {
         txtTime = (EditText) view.findViewById(R.id.txt_time_bita);
         btStart = (Button) view.findViewById(R.id.btn_time_start);
         btStart.setOnClickListener(onStartTime);
-        looperThread= new StoreLooperThread();
+        BitafiraService.setUpdateListener(this);
     }
 
     private View.OnClickListener onStartTime = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            btStart.setEnabled(false);
             progressDialog.setIndeterminate(true);
-            progressDialog.setMessage("Authenticating...");
-            progressDialog.show();
-            looperThread.start();
-
+            progressDialog.setMessage("Conectando...");
+            getActivity().startService(new Intent(getActivity(),BitafiraService.class));
         }
     };
 
-    private Handler myHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            //UPDATE_LISTENER.updateTime(msg.obj.toString());
-            txtTime.setText(msg.obj.toString());
-        }
-    };
-
-    private void startTime() {
-
-        countDownTimer = new CountDownTimer(30000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                Message msg_out = new Message();
-                msg_out.obj = hmsTimeFormatter(millisUntilFinished);
-                myHandler.sendMessage(msg_out);
-            }
-
-            @Override
-            public void onFinish() {
-                progressDialog.dismiss();
-            }
-        }.start();
-        countDownTimer.start();
+    public void startProgress() {
+        progressDialog.show();
+    }
+    public void stopProgress() {
+        progressDialog.dismiss();
     }
 
-    /**
-     * method to convert millisecond to time format
-     *
-     * @param milliSeconds
-     * @return HH:mm:ss time formatted string
-     */
-    private String hmsTimeFormatter(long milliSeconds) {
-        String hms = String.format("%02d:%02d:%02d",
-                TimeUnit.MILLISECONDS.toHours(milliSeconds),
-                TimeUnit.MILLISECONDS.toMinutes(milliSeconds) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milliSeconds)),
-                TimeUnit.MILLISECONDS.toSeconds(milliSeconds) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliSeconds)));
-        return hms;
-    }
-
-
-    public class StoreLooperThread  extends Thread {
-        public Handler mHandler;
-        public void run() {
-
-            Looper.prepare();
-            startTime();
-            mHandler = new Handler() {
-
-                public void handleMessage(Message msg_in) {
-
-                }
-
-            };
-
-            Looper.loop();
-        }
+    public void updateText(String obj) {
+        txtTime.setText(obj);
     }
 }
 
