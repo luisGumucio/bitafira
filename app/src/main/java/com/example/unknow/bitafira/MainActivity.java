@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.unknow.bitafira.global.Constante;
 import com.example.unknow.bitafira.model.Pacient;
+import com.example.unknow.bitafira.pacient.PacientBitalinoFragment;
 import com.example.unknow.bitafira.pacient.PacientEventFragment;
 import com.example.unknow.bitafira.pacient.PacientInfoFragment;
 import com.example.unknow.bitafira.pacient.PacientMainFragment;
@@ -190,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id) {
             case R.id.nav_info:
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.main_fragment, new PacientMainFragment());
+                ft.replace(R.id.main_fragment, new PacientBitalinoFragment());
                 ft.commit();
                 break;
             case MENU_ADMIN_CONFIGURATION:
