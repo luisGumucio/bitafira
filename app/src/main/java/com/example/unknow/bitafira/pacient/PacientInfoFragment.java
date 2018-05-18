@@ -34,9 +34,6 @@ public class PacientInfoFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_pacient_info, parent, false);
     }
 
-    // This event is triggered soon after onCreateView().
-    // onViewCreated() is only called if the view returned from onCreateView() is non-null.
-    // Any view setup should occur here.  E.g., view lookups and attaching view listeners.
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -46,18 +43,12 @@ public class PacientInfoFragment extends Fragment {
         floatingActionButton2 = (FloatingActionButton)  view.findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton3 = (FloatingActionButton)  view.findViewById(R.id.material_design_floating_action_menu_item3);
 
-//        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                //TODO something when floating action menu first item clicked
-//
-//            }
-//        });
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
                 Fragment mFrag = new PacientHistoryFragment();
                 Bundle bundle=new Bundle();
-                bundle.putString("PACIENT_ID", pacient.getId());
+                bundle.putSerializable("PACIENT", pacient);
                 mFrag.setArguments(bundle);
                 t.replace(R.id.main_fragment, mFrag).addToBackStack(null);
                 t.commit();
@@ -81,17 +72,8 @@ public class PacientInfoFragment extends Fragment {
 
     private void goToEvaluation() {
                 Bundle bundle=new Bundle();
-                bundle.putString("PACIENT_ID", pacient.getId());
-                bundle.putString("PACIENT_NAME", pacient.getName() );
-                bundle.putString("PACIENT_LASTNAME", pacient.getLastName() );
-                bundle.putInt("PACIENT_EDAD", pacient.getAge() );
-                bundle.putInt("PACIENT_PHONE", pacient.getPhone());
-                bundle.putInt("PACIENT_PHONE_REFE", pacient.getPhoneRefe());
-                bundle.putString("PACIENT_EMAIL", pacient.getEmail() );
-                bundle.putString("PACIENT_DIRECCION", pacient.getAddress() );
-                bundle.putString("PACIENT_ROL", pacient.getRole());
-                bundle.putInt("PACIENT_HISTORIAL", pacient.getNumberHistory());
-                Fragment mFrag = new PacientEvaluationFragment();
+                bundle.putSerializable("PACIENT", pacient);
+                Fragment mFrag = new PacientBitalinoFragment();
                 mFrag.setArguments(bundle);
                 t.replace(R.id.main_fragment, mFrag).addToBackStack(null);
                 t.commit();
@@ -99,16 +81,7 @@ public class PacientInfoFragment extends Fragment {
 
     private void init() {
         if(getArguments() !=null){
-            pacient = new Pacient();
-            pacient.setId(getArguments().getString("PACIENT_ID"));
-            pacient.setName(getArguments().getString("PACIENT_NAME"));
-            pacient.setLastName(getArguments().getString("PACIENT_LASTNAME"));
-            pacient.setPhone(getArguments().getInt("PACIENT_PHONE", 0));
-            pacient.setAddress(getArguments().getString("PACIENT_DIRECCION"));
-            pacient.setRole(getArguments().getString("PACIENT_ROL"));
-            pacient.setPhoneRefe(getArguments().getInt("PACIENT_PHONE_REFE", 0));
-            pacient.setEmail(getArguments().getString("PACIENT_EMAIL"));
-            pacient.setNumberHistory(getArguments().getInt("PACIENT_HISTORIAL",0));
+            pacient = (Pacient) getArguments().getSerializable("PACIENT");
         }
         full.setText(pacient.getName() + " "+pacient.getLastName());
         address.setText(pacient.getAddress());
@@ -117,6 +90,5 @@ public class PacientInfoFragment extends Fragment {
         historial.setText(String.valueOf(pacient.getNumberHistory()));
         email.setText(pacient.getEmail());
         phoneRefe.setText(String.valueOf(pacient.getPhoneRefe()));
-        //dbEvaluation = FirebaseDatabase.getInstance().getReference("evaluations").child(pacient.getId());
     }
 }

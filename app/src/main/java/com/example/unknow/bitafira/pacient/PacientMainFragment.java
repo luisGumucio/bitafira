@@ -105,12 +105,10 @@ public class PacientMainFragment extends Fragment {
         mValueListeneroContactos = mPacients.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) { //si existen datos, hay que obtener la información
-                    pacients.clear();//limpiamos la data
+                if (dataSnapshot.exists()) {
+                    pacients.clear();
                     for (DataSnapshot snapshotContacto : dataSnapshot.getChildren()) {
                         Pacient pacient1 = snapshotContacto.getValue(Pacient.class);
-                        //le decimos a Firebase que el q objeto en JSON lo parse a un objecto Contacto
-                        //Log.i("INFO","pacient key "+ snapshotContacto.getKey());
                         if(pacient1.getRole().equals("Paciente")) {
                             pacients.add(pacient1);
                         }
@@ -130,20 +128,8 @@ public class PacientMainFragment extends Fragment {
     private AdapterView.OnItemClickListener itemClickListenerAdmin = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            Intent intent = new Intent(MainActivity.this, PacientInfoActivity.class);
             Bundle bundle=new Bundle();
-            Pacient pacient2 = pacients.get(position);
-            bundle.putString("PACIENT_ID", pacient2.getId());
-            bundle.putInt("EXTRA_POSITION", position);
-            bundle.putString("PACIENT_NAME", pacient2.getName() );
-            bundle.putString("PACIENT_LASTNAME", pacient2.getLastName() );
-            bundle.putInt("PACIENT_EDAD", pacient2.getAge() );
-            bundle.putInt("PACIENT_PHONE", pacient2.getPhone());
-            bundle.putInt("PACIENT_PHONE_REFE", pacient2.getPhoneRefe());
-            bundle.putString("PACIENT_EMAIL", pacient2.getEmail() );
-            bundle.putString("PACIENT_DIRECCION", pacient2.getAddress() );
-            bundle.putString("PACIENT_ROL", pacient2.getRole());
-            bundle.putInt("PACIENT_HISTORIAL", pacient2.getNumberHistory());
+            bundle.putSerializable("PACIENT", pacients.get(position));
             Fragment mFrag = new PacientInfoFragment();
             mFrag.setArguments(bundle);
             t.replace(R.id.main_fragment, mFrag).addToBackStack(null);
@@ -155,18 +141,7 @@ public class PacientMainFragment extends Fragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Bundle bundle=new Bundle();
-            Pacient pacient2 = pacients.get(position);
-            bundle.putString("PACIENT_ID", pacient2.getId());
-            bundle.putInt("EXTRA_POSITION", position);
-            bundle.putString("PACIENT_NAME", pacient2.getName() );
-            bundle.putString("PACIENT_LASTNAME", pacient2.getLastName() );
-            bundle.putInt("PACIENT_EDAD", pacient2.getAge() );
-            bundle.putInt("PACIENT_PHONE", pacient2.getPhone());
-            bundle.putInt("PACIENT_PHONE_REFE", pacient2.getPhoneRefe());
-            bundle.putString("PACIENT_EMAIL", pacient2.getEmail() );
-            bundle.putString("PACIENT_DIRECCION", pacient2.getAddress() );
-            bundle.putString("PACIENT_ROL", pacient2.getRole());
-            bundle.putInt("PACIENT_HISTORIAL", pacient2.getNumberHistory());
+            bundle.putSerializable("PACIENT", pacients.get(position));
             Fragment mFrag = new PacientEventFragment();
             mFrag.setArguments(bundle);
             t.replace(R.id.main_fragment, mFrag).addToBackStack(null);
@@ -179,10 +154,8 @@ public class PacientMainFragment extends Fragment {
         public boolean onItemLongClick(AdapterView<?> parent, View view,
                                        int position, long id) {
             // TODO Auto-generated method stub
-            //Pacient pacient2 = pacients.get(position);
             itemPosition = position;
             showPopup(view);
-
             return true;
         }
     };

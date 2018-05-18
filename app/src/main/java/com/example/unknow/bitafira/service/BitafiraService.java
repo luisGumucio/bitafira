@@ -6,7 +6,9 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -16,14 +18,25 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bitalino.comm.BITalinoDevice;
+import com.bitalino.comm.BITalinoException;
+import com.bitalino.comm.BITalinoFrame;
 import com.example.unknow.bitafira.R;
+import com.example.unknow.bitafira.model.BITalinoReading;
 import com.example.unknow.bitafira.pacient.PacientBitalinoFragment;
 import com.example.unknow.bitafira.pacient.PacientEvaluationFragment;
+import com.example.unknow.bitafira.utils.BITlog;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -54,6 +67,11 @@ public class BitafiraService extends Service {
     private OutputStream os = null;
     private BITalinoDevice bitalino;
     DatabaseReference dbBitalino;
+    public String filename = null;
+    public OutputStreamWriter fout = null;
+    String id;
+    String idPacient;
+    Thread thread;
 
     /**
      * Establece quien va ha recibir las actualizaciones del cronometro
@@ -66,19 +84,21 @@ public class BitafiraService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String id = intent.getStringExtra("ID_EVALUATION");
-        String idPacient = intent.getStringExtra("ID_PACIENT");
+        id = UPDATE_LISTENER.getIdEvaluation();
+        idPacient = UPDATE_LISTENER.getIdPacient();
         dbBitalino = FirebaseDatabase.getInstance().getReference("bitalino").child(idPacient);
-        UPDATE_LISTENER.startProgress();
         dev = btAdapter.getRemoteDevice(remoteDevice);
+        try {
+            sock = dev.createRfcommSocketToServiceRecord(MY_UUID);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 UPDATE_LISTENER.updateText(msg.obj.toString());
             }
         };
-        //return super.onStartCommand(intent, flags, startId);
-
         initConnection();
         return Service.START_STICKY;
     }
@@ -86,10 +106,11 @@ public class BitafiraService extends Service {
     private void initConnection() {
         try {
             Log.d(TAG, "Stopping Bluetooth discovery.");
-            sock = dev.createRfcommSocketToServiceRecord(MY_UUID);
+            btAdapter.cancelDiscovery();
             sock.connect();
             bitalino = new BITalinoDevice(1000, new int[]{1});
             bitalino.open(sock.getInputStream(), sock.getOutputStream());
+            UPDATE_LISTENER.stopProgress();
             startTimeCodown();
         } catch (Exception e) {
             UPDATE_LISTENER.stopProgress();
@@ -101,7 +122,7 @@ public class BitafiraService extends Service {
         }
     }
 
-    private void startTimeCodown() {
+    private void startTimeCodown() throws BITalinoException {
         countDownTimer = new CountDownTimer(30000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -112,10 +133,22 @@ public class BitafiraService extends Service {
 
             @Override
             public void onFinish() {
-
+                try {
+                    UPDATE_LISTENER.updateText("00:00:00");
+                    closeFile();
+                    thread.interrupt();
+                    bitalino.stop();
+                    sock.close();
+                } catch (BITalinoException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         };
         countDownTimer.start();
+        createFile(id, idPacient);
+        runBitalino();
     }
 
     /**
@@ -125,12 +158,10 @@ public class BitafiraService extends Service {
      * @return HH:mm:ss time formatted string
      */
     private String hmsTimeFormatter(long milliSeconds) {
-
         String hms = String.format("%02d:%02d:%02d",
                 TimeUnit.MILLISECONDS.toHours(milliSeconds),
                 TimeUnit.MILLISECONDS.toMinutes(milliSeconds) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milliSeconds)),
                 TimeUnit.MILLISECONDS.toSeconds(milliSeconds) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliSeconds)));
-
         return hms;
     }
 
@@ -138,10 +169,138 @@ public class BitafiraService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        try {
+            bitalino.stop();
+        } catch (BITalinoException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
     }
+
+    private void createFile(String id, String idPacient) {
+        Log.v(TAG, "UI BUtton pressed: Store Block - createFile()");
+        if (fout == null) {
+
+            Date cDate = new Date();
+            String fDate = new SimpleDateFormat("yyyyMMddHHmmss").format(cDate);
+            filename = id + ".txt";
+
+            ArrayList<Integer> channelList = new ArrayList<Integer>();
+            for (int i = 0; i < 2; i++) {
+                boolean find = false;
+                for (int j = 0; j < BITlog.channels.length; j++) {
+                    if (i == BITlog.channels[j]) {
+                        find = true;
+                        channelList.add(i, Integer.valueOf(i));
+                    }
+                }
+                if (!find) channelList.add(i, null);
+            }
+
+            String line = "#{" + "\"date\": \"" + new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS").format(cDate) + "\", "
+                    + "\"MAC\": \"" + BITlog.MAC + "\", "
+                    + "\"ChannelsOrder\": [\"SeqN\"";
+
+            for (int i = 0; i < 2; i++) {
+                if (channelList.get(i) != null) {
+                    line += ", " + "\t" + "\"Analog" + i + "\"";
+                }
+            }
+
+            line += " ]}\n";
+
+            // Select between external or internal memory
+            if (true) {
+                try {
+                    File sdPath = Environment.getExternalStorageDirectory();  //getExternalStorageDirectory();
+                    String directory = "/Bitafira/" + idPacient;
+                    File dir = new File(sdPath.getAbsolutePath() + directory);
+                    dir.mkdirs();
+
+                    File f = new File(dir, filename);
+                    fout = new OutputStreamWriter(new FileOutputStream(f));
+
+                    Log.v(TAG, "Log file: " + filename + " created in the SD card");
+                    fout.write(line);
+                    fout.flush();
+                } catch (Exception ex) {
+                    stopSelf();
+                    Log.e("Ficheros", "Error writing the file in SD card");
+                }
+            } else {
+                try {
+                    fout = new OutputStreamWriter(openFileOutput(filename, MODE_WORLD_WRITEABLE));
+                    Log.v(TAG, "Log file: " + filename + " created in the internal memory");
+                    fout.write(line);
+                    //Log.v(TAG, "Write: \n\t"+line);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error at writing in internal memory");
+                    e.printStackTrace();
+
+                }
+            }
+        }
+    }
+
+    private void runBitalino() throws BITalinoException {
+        thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    bitalino.start();
+                    int counter = 0;
+                    while (counter < 100) {
+                        final int numberOfSamplesToRead = 1000;
+                        BITalinoFrame[] frames = bitalino.read(numberOfSamplesToRead);
+                        // present data in screen
+                        for (BITalinoFrame myBitFrame : frames) {
+                            if (fout != null) {
+                                BITalinoReading reading = new BITalinoReading();
+                                String idBitalino = dbBitalino.push().getKey();
+                                reading.setId(idBitalino);
+                                reading.setTimestamp(System.currentTimeMillis());
+                                reading.setSequence(Integer.valueOf(myBitFrame.getSequence()));
+                                reading.setData(myBitFrame.getAnalog(1));
+                                // dbBitalino.child(idBitalino).setValue(reading);
+                                String line = Integer.valueOf(myBitFrame.getSequence()).toString();
+                                line += "\t" + myBitFrame.getAnalog(1);
+                                line += "\n";
+                                try {
+                                    fout.write(line);
+                                } catch (IOException e) {
+                                    Log.v(TAG, "Error writing to the file " + line);
+                                }
+                            }
+                        }
+                        counter++;
+                    }
+                } catch (BITalinoException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+    }
+
+    private void closeFile() {
+        Log.v(TAG, "UI BUtton pressed: Store Block - closeFile()");
+
+        if (fout != null) {
+            try {
+                fout.flush();
+                fout.close();
+                fout = null;
+                Log.v(TAG, "File closed " + filename);
+            } catch (IOException e) {
+                Log.e(TAG, "Error at writing in internal memory");
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
