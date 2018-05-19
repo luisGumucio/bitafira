@@ -30,5 +30,6 @@ dependencies {
     compile 'com.google.firebase:firebase-database:9.6.1'
     compile 'com.google.firebase:firebase-core:9.6.1'
     compile 'com.bitalino:bitalino-java-sdk:1.0.1'
+    compile group: 'com.androidplot', name: 'androidplot-core', version: '1.5.4'
 }
 apply plugin: 'com.google.gms.google-services'

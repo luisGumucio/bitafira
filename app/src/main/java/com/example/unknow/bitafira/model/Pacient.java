@@ -22,6 +22,7 @@ public class Pacient implements Serializable {
     private String userId;
     private String role;
     private String sexo;
+    private String nacimiento;
 
     public Pacient() {
 
@@ -137,6 +138,14 @@ public class Pacient implements Serializable {
 
     public void setSexo(String sexo) {
         this.sexo = sexo;
+    }
+
+    public String getNacimiento() {
+        return nacimiento;
+    }
+
+    public void setNacimiento(String nacimiento) {
+        this.nacimiento = nacimiento;
     }
 }
 

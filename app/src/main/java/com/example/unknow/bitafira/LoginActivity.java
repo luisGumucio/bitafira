@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
                     R.style.AppTheme_Dark_Dialog);
             progressDialog.setIndeterminate(true);
-            progressDialog.setMessage("Authenticating...");
+            progressDialog.setMessage("Autenticando...");
             progressDialog.show();
             mAuth.signInWithEmailAndPassword(mEmailView.getText().toString(),
                     mPasswordView.getText().toString())

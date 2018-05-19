@@ -3,6 +3,7 @@ package com.example.unknow.bitafira.pacient;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.unknow.bitafira.LoginActivity;
 import com.example.unknow.bitafira.R;
 import com.example.unknow.bitafira.global.Constante;
 import com.example.unknow.bitafira.model.Pacient;
@@ -169,12 +171,18 @@ public class PacientSaveFragment extends Fragment {
     private View.OnClickListener agregarClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            final ProgressDialog progressDialog = new ProgressDialog(getContext(),
+                    R.style.AppTheme_Dark_Dialog);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Guardando espere por favor...");
+            progressDialog.show();
             final Pacient pacient = savePacient();
             mAuth.createUserWithEmailAndPassword(pacient.getEmail(), txtPassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()) {
                         mRefPacient.child(pacient.getId()).setValue(pacient);
+                        progressDialog.dismiss();
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("PACIENT", pacient);
                         android.support.v4.app.Fragment mFrag = new PacientMainFragment();
@@ -182,6 +190,7 @@ public class PacientSaveFragment extends Fragment {
                         t.replace(R.id.main_fragment, mFrag);
                         t.commit();
                     } else {
+                        progressDialog.dismiss();
                         Toast.makeText(getContext().getApplicationContext(), "Fallo al registrar", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -206,7 +215,7 @@ public class PacientSaveFragment extends Fragment {
         pacient.setRole(txtRoles.getText().toString());
         pacient.setSexo(txtSexo.getText().toString());
         pacient.setPhoneRefe(Integer.parseInt(txtPhoneRefe.getText().toString()));
-
+        pacient.setNacimiento(txtNacimiento.getText().toString());
         return pacient;
     }
 }

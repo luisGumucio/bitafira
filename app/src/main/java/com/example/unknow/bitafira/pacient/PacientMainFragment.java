@@ -102,7 +102,7 @@ public class PacientMainFragment extends Fragment {
 
         }
 
-        mValueListeneroContactos = mPacients.addValueEventListener(new ValueEventListener() {
+        mValueListeneroContactos = mPacients.orderByChild("lastName").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {

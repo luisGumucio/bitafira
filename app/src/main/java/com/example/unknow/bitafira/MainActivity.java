@@ -16,7 +16,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.unknow.bitafira.doctor.DoctorFragmentView;
 import com.example.unknow.bitafira.global.Constante;
+import com.example.unknow.bitafira.global.InfoPersonalFragment;
 import com.example.unknow.bitafira.model.Pacient;
 import com.example.unknow.bitafira.pacient.PacientBitalinoFragment;
 import com.example.unknow.bitafira.pacient.PacientEventFragment;
@@ -130,16 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         role.setText(pacient.getRole());
 
         Bundle bundle=new Bundle();
-        bundle.putString("PACIENT_ID", pacient.getId());
-        bundle.putString("PACIENT_NAME", pacient.getName() );
-        bundle.putString("PACIENT_LASTNAME", pacient.getLastName() );
-        bundle.putInt("PACIENT_EDAD", pacient.getAge() );
-        bundle.putInt("PACIENT_PHONE", pacient.getPhone());
-        bundle.putInt("PACIENT_PHONE_REFE", pacient.getPhoneRefe());
-        bundle.putString("PACIENT_EMAIL", pacient.getEmail() );
-        bundle.putString("PACIENT_DIRECCION", pacient.getAddress() );
-        bundle.putString("PACIENT_ROL", pacient.getRole());
-        bundle.putInt("PACIENT_HISTORIAL", pacient.getNumberHistory());
+        bundle.putSerializable("PACIENT", pacient);
         Fragment mFrag = new PacientEventFragment();
         mFrag.setArguments(bundle);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -190,11 +183,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (id) {
             case R.id.nav_info:
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("PACIENT", pacient);
+                Fragment mFrag = new InfoPersonalFragment();
+                mFrag.setArguments(bundle);
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.main_fragment, new PacientBitalinoFragment());
+                ft.replace(R.id.main_fragment, mFrag);
                 ft.commit();
                 break;
             case MENU_ADMIN_CONFIGURATION:
+                Fragment mFrag1 = new DoctorFragmentView();
+                FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
+                ft1.replace(R.id.main_fragment, mFrag1);
+                ft1.commit();
                 break;
             case MENU_ADMIN_CERRAR_SESSION:
                 mAuth.signOut();
