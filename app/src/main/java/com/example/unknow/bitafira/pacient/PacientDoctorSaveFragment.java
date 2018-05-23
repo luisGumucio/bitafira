@@ -1,10 +1,7 @@
 package com.example.unknow.bitafira.pacient;
 
-
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,13 +16,11 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.unknow.bitafira.LoginActivity;
 import com.example.unknow.bitafira.R;
 import com.example.unknow.bitafira.global.Constante;
 import com.example.unknow.bitafira.model.Pacient;
 import com.example.unknow.bitafira.utils.BackButtonHandlerInterface;
 import com.example.unknow.bitafira.utils.DatePickerFragment;
-import com.example.unknow.bitafira.utils.OnBackClickListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -36,37 +31,35 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class PacientSaveFragment extends Fragment {
+public class PacientDoctorSaveFragment extends Fragment {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mRefPacient;
     private List<Pacient> pacientList;
     EditText txtName;
     EditText txtLastName;
-    EditText txtNroHistory;
     EditText txtAge;
-    EditText txtWeight;
-    EditText txtHeight;
     EditText txtEmail;
     EditText txtAddres;
     EditText txtPhone;
     EditText txtNacimiento;
     EditText txtPassword;
+    EditText txtRoles;
     EditText txtPhoneRefe, txtSexo;
     Button btnAgregar;
     FragmentTransaction t;
     FirebaseAuth mAuth;
     Pacient pacient;
     private BackButtonHandlerInterface backButtonHandler;
+    CharSequence roles[] = new CharSequence[] {"Doctor", "Técnico"};
     CharSequence sexo[] = new CharSequence[] {"Masculino", "Femenino"};
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_pacient_save, parent, false);
+        return inflater.inflate(R.layout.fragment_pacient_doctor_save, parent, false);
     }
 
     // This event is triggered soon after onCreateView().
@@ -77,10 +70,7 @@ public class PacientSaveFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         txtName = (EditText) view.findViewById(R.id.input_name);
         txtLastName = (EditText) view.findViewById(R.id.input_last_name);
-        txtNroHistory = (EditText) view.findViewById(R.id.input_number_history);
         txtAge = (EditText) view.findViewById(R.id.input_age);
-        txtWeight = (EditText) view.findViewById(R.id.input_weight);
-        txtHeight = (EditText) view.findViewById(R.id.input_height);
         txtEmail = (EditText) view.findViewById(R.id.input_email);
         txtAddres = (EditText) view.findViewById(R.id.input_address);
         txtPhone = (EditText) view.findViewById(R.id.input_phone);
@@ -88,6 +78,8 @@ public class PacientSaveFragment extends Fragment {
         txtPassword = (EditText) view.findViewById(R.id.input_password);
         txtSexo = (EditText) view.findViewById(R.id.input_sexo);
         txtSexo.setOnClickListener(putSexo);
+        txtRoles = (EditText) view.findViewById(R.id.input_roles);
+        txtRoles.setOnClickListener(putRoles);
         txtNacimiento = (EditText) view.findViewById(R.id.input_nacimiento);
         txtNacimiento.setOnClickListener(dataNcimiento);
         btnAgregar = (Button) view.findViewById(R.id.btn_save);
@@ -100,6 +92,22 @@ public class PacientSaveFragment extends Fragment {
         pacient = (Pacient) getArguments().getSerializable("PACIENT");
     }
 
+
+    private View.OnClickListener putRoles = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Seleccione un rol por favor!");
+            builder.setItems(roles, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // the user clicked on colors[which]
+                    txtRoles.setText(roles[which]);
+                }
+            });
+            builder.show();
+        }
+    };
 
     private View.OnClickListener putSexo = new View.OnClickListener() {
         @Override
@@ -184,18 +192,16 @@ public class PacientSaveFragment extends Fragment {
         pacient.setId(id);
         pacient.setName(txtName.getText().toString());
         pacient.setLastName(txtLastName.getText().toString());
-        pacient.setNumberHistory(Integer.parseInt(txtNroHistory.getText().toString()));
         pacient.setAge(Integer.parseInt(txtAge.getText().toString()));
-        pacient.setWeight(Double.parseDouble(txtWeight.getText().toString()));
-        pacient.setHeight(Double.parseDouble(txtHeight.getText().toString()));
         pacient.setEmail(txtEmail.getText().toString());
         pacient.setAddress(txtAddres.getText().toString());
         pacient.setPhone(Integer.parseInt(txtPhone.getText().toString()));
         pacient.setUserId(id);
-        pacient.setRole("Paciente");
+        pacient.setRole(txtRoles.getText().toString());
         pacient.setSexo(txtSexo.getText().toString());
         pacient.setPhoneRefe(Integer.parseInt(txtPhoneRefe.getText().toString()));
         pacient.setNacimiento(txtNacimiento.getText().toString());
         return pacient;
     }
 }
+

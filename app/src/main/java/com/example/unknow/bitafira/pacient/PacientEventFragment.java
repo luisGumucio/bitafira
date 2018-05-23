@@ -57,8 +57,7 @@ public class PacientEventFragment extends Fragment {
         eventAdapter = new EventAdapter(view.getContext().getApplicationContext(), events);
         //Relacionando la lista con el adaptador
         listEvents.setAdapter(eventAdapter);
-        pacient = new Pacient();
-        pacient.setId(getArguments().getString("PACIENT_ID"));
+        pacient = (Pacient) getArguments().getSerializable("PACIENT");
         mDatabase = FirebaseDatabase.getInstance();
         mEvents = mDatabase.getReference("events").child(pacient.getId());;
         t = this.getFragmentManager().beginTransaction();//apuntamos con que nodo vamos a trabajar
