@@ -5,20 +5,24 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.unknow.bitafira.R;
 import com.example.unknow.bitafira.model.Evaluation;
+import com.example.unknow.bitafira.model.EvaluationActive;
 import com.example.unknow.bitafira.model.Event;
 import com.example.unknow.bitafira.model.Pacient;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -31,7 +35,7 @@ public class PacientEventFragment extends Fragment {
     List<Event> events;
     ValueEventListener mValueListeneroContactos;
     FirebaseDatabase mDatabase;
-    DatabaseReference mEvents;
+    DatabaseReference mEvents, dbEvaluationActive;
     FragmentTransaction t;
     Pacient pacient;
 
@@ -59,17 +63,42 @@ public class PacientEventFragment extends Fragment {
         listEvents.setAdapter(eventAdapter);
         pacient = (Pacient) getArguments().getSerializable("PACIENT");
         mDatabase = FirebaseDatabase.getInstance();
-        mEvents = mDatabase.getReference("events").child(pacient.getId());;
+        mEvents = mDatabase.getReference("events").child(pacient.getId());
+        ;
+        dbEvaluationActive = FirebaseDatabase.getInstance().getReference("evaluation_active").child(pacient.getId());
         t = this.getFragmentManager().beginTransaction();//apuntamos con que nodo vamos a trabajar
         btnAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment mFrag = new PacientEventSaveFragment();
-                Bundle bundle=new Bundle();
-                bundle.putString("PACIENT_ID", pacient.getId());
-                mFrag.setArguments(bundle);
-                t.replace(R.id.main_fragment, mFrag).addToBackStack(null);
-                t.commit();
+                Query query = dbEvaluationActive.orderByChild("evaluation").equalTo(true);
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            EvaluationActive active = null;
+                            for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                                active = issue.getValue(EvaluationActive.class);
+                            }
+                            Fragment mFrag = new PacientEventSaveFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("PACIENT", pacient);
+                            bundle.putSerializable("EVALUATION", active);
+                            mFrag.setArguments(bundle);
+                            t.replace(R.id.main_fragment, mFrag).addToBackStack(null);
+                            t.commit();
+                        } else {
+                            Toast toast = Toast.makeText(getContext(), "El paciente no esta siendo evaluado.",
+                                    Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
         loadDataAdmin();

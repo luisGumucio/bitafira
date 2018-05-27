@@ -68,7 +68,7 @@
                 android:layout_marginTop="10dp">
                 <LinearLayout
                     android:orientation="horizontal"
-                    android:paddingLeft="25dp"
+                    android:paddingLeft="2dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <ImageView
@@ -84,38 +84,133 @@
                         android:paddingLeft="5dp"
                         android:text="Tiempo para evaluar"/>
                     <EditText
+                        android:id="@+id/txt_hour"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="14dp"
+                        android:ems="2"
+                        android:hint="00"
+                        android:textStyle="bold"
+                        android:inputType="time" />
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/editText1"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_vertical"
+                        android:paddingLeft="14dp"
+                        android:textStyle="bold"
+                        android:text=":" />
+
+                    <EditText
+                        android:id="@+id/txt_minute"
+                        style="@style/Widget.AppCompat.AutoCompleteTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:ems="2"
+                        android:hint="00"
+                        android:inputType="time"
+                        android:paddingLeft="14dp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/editText1"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_vertical"
+                        android:paddingLeft="14dp"
+                        android:textStyle="bold"
+                        android:text=":" />
+                    <EditText
+                        android:id="@+id/txt_second"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:ems="2"
+                        android:hint="00"
+                        android:inputType="time"
+                        android:paddingLeft="14dp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:paddingLeft="2dp"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/time_r"/>
+                    <TextView
+                        android:textStyle="bold"
+                        android:id="@+id/txtControl2"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="5dp"
+                        android:text="Tiempo Transcurrido"/>
+                    <TextView
                         android:textStyle="bold"
                         android:id="@+id/txt_time_bita"
                         android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="20dp"
-                        android:text="00:00"/>
+                        android:textSize="14dp"
+                        android:text="00:00:00"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/file"/>
+                    <TextView
+                        android:textStyle="bold"
+                        android:id="@+id/txtControl23"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="5dp"
+                        android:text="Archivo"/>
+                    <TextView
+                        android:textStyle="bold"
+                        android:id="@+id/txt_file"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:textSize="14dp"
+                        android:text="sample.txt"/>
                 </LinearLayout>
                 <LinearLayout
                     android:orientation="horizontal"
-                    android:paddingLeft="25dp"
+                    android:paddingLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <Button
                         android:id="@+id/btn_time_start"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="20dp"
                         android:background="@color/colorPrimary"
                         android:text="Iniciar"
                         android:textColor="@android:color/white" />
                 </LinearLayout>
                 <LinearLayout
                     android:orientation="horizontal"
-                    android:paddingLeft="25dp"
+                    android:paddingLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <Button
                         android:id="@+id/btn_cancelar"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="22dp"
                         android:background="@color/colorPrimary"
                         android:text="Cancelar"
                         android:textColor="@android:color/white" />

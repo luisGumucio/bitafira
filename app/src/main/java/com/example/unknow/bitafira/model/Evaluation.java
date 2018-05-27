@@ -32,4 +32,5 @@ public class Evaluation {
     public void setTimeEvaluation(String timeEvaluation) {
         this.timeEvaluation = timeEvaluation;
     }
+
 }

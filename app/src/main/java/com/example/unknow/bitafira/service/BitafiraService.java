@@ -60,6 +60,7 @@ public class BitafiraService extends Service {
     public static PacientBitalinoFragment UPDATE_LISTENER;
     private double cronometro = 0;
     private Handler handler;
+    private Handler handlerFile;
     private CountDownTimer countDownTimer;
     private BluetoothDevice dev = null;
     private BluetoothSocket sock = null;
@@ -99,11 +100,23 @@ public class BitafiraService extends Service {
                 UPDATE_LISTENER.updateText(msg.obj.toString());
             }
         };
-        initConnection();
+        handlerFile = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                UPDATE_LISTENER.updateTextFile(msg.obj.toString());
+            }
+        };
+        try {
+            initConnection();
+        } catch (BITalinoException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return Service.START_STICKY;
     }
 
-    private void initConnection() {
+    private void initConnection() throws BITalinoException, IOException {
         try {
             Log.d(TAG, "Stopping Bluetooth discovery.");
             btAdapter.cancelDiscovery();
@@ -113,7 +126,10 @@ public class BitafiraService extends Service {
             UPDATE_LISTENER.stopProgress();
             startTimeCodown();
         } catch (Exception e) {
+            bitalino.stop();
+            sock.close();
             UPDATE_LISTENER.stopProgress();
+
             new AlertDialog.Builder(UPDATE_LISTENER.getContext())
                     .setTitle("Error")
                     .setMessage("Fallo al conectar con el bitalino")
@@ -123,7 +139,8 @@ public class BitafiraService extends Service {
     }
 
     private void startTimeCodown() throws BITalinoException {
-        countDownTimer = new CountDownTimer(30000, 1000) {
+        long time = UPDATE_LISTENER.getTime();
+        countDownTimer = new CountDownTimer(time, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 Message message = new Message();
@@ -139,6 +156,7 @@ public class BitafiraService extends Service {
                     thread.interrupt();
                     bitalino.stop();
                     sock.close();
+                    UPDATE_LISTENER.clear();
                 } catch (BITalinoException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -189,7 +207,9 @@ public class BitafiraService extends Service {
             Date cDate = new Date();
             String fDate = new SimpleDateFormat("yyyyMMddHHmmss").format(cDate);
             filename = id + ".txt";
-
+            Message message = new Message();
+            message.obj = filename;
+            handlerFile.sendMessage(message);
             ArrayList<Integer> channelList = new ArrayList<Integer>();
             for (int i = 0; i < 2; i++) {
                 boolean find = false;
@@ -263,12 +283,14 @@ public class BitafiraService extends Service {
                                 BITalinoReading reading = new BITalinoReading();
                                 String idBitalino = dbBitalino.push().getKey();
                                 reading.setId(idBitalino);
-                                reading.setTimestamp(System.currentTimeMillis());
+                                long current = System.currentTimeMillis();
+                                reading.setTimestamp(current);
                                 reading.setSequence(Integer.valueOf(myBitFrame.getSequence()));
                                 reading.setData(myBitFrame.getAnalog(1));
                                 // dbBitalino.child(idBitalino).setValue(reading);
                                 String line = Integer.valueOf(myBitFrame.getSequence()).toString();
                                 line += "\t" + myBitFrame.getAnalog(1);
+                                line += "\t" + current;
                                 line += "\n";
                                 try {
                                     fout.write(line);

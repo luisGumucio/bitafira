@@ -36,11 +36,13 @@ public class EvaluationAdapter extends ArrayAdapter<Evaluation> {
         // Referencias UI.
         TextView dateStart = (TextView) convertView.findViewById(R.id.txt_date_start);
         TextView timeEvaluation = (TextView) convertView.findViewById(R.id.txt_time_evaluation);
+        TextView id = (TextView) convertView.findViewById(R.id.txt_file_evaluations);
 
         // Lead actual.
         Evaluation evaluation = getItem(position);
-
+        String file = evaluation.getId()+".txt";
         // Setup.
+        id.setText(file);
         dateStart.setText(evaluation.getDateStart());
         timeEvaluation.setText(String.valueOf(evaluation.getTimeEvaluation()));
 

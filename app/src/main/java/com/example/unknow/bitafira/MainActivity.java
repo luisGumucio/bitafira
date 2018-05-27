@@ -17,12 +17,15 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.unknow.bitafira.doctor.DoctorFragmentView;
+import com.example.unknow.bitafira.global.ConfigurationFragment;
 import com.example.unknow.bitafira.global.Constante;
 import com.example.unknow.bitafira.global.InfoPersonalFragment;
 import com.example.unknow.bitafira.model.Pacient;
 import com.example.unknow.bitafira.pacient.PacientBitalinoFragment;
+import com.example.unknow.bitafira.pacient.PacientDoctorSaveFragment;
 import com.example.unknow.bitafira.pacient.PacientEventFragment;
 import com.example.unknow.bitafira.pacient.PacientInfoFragment;
+import com.example.unknow.bitafira.pacient.PacientMainDoctorFragment;
 import com.example.unknow.bitafira.pacient.PacientMainFragment;
 import com.example.unknow.bitafira.utils.BackButtonHandlerInterface;
 import com.example.unknow.bitafira.utils.OnBackClickListener;
@@ -71,6 +74,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void init() {
          mAuth = FirebaseAuth.getInstance();
+         if(mAuth != null) {
+
+         }
         mDatabase = FirebaseDatabase.getInstance();
         mPacients = mDatabase.getReference(Constante.contacto);
         Query query = mPacients.orderByChild("email").equalTo(mAuth.getCurrentUser().getEmail());
@@ -86,8 +92,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     pacient = data.getValue(Pacient.class);
-                    if (pacient.getRole().equals("Técnico") || pacient.getRole().equals("Doctor")) {
+                    if (pacient.getRole().equals("Técnico")) {
                         loadMenuAdmin();
+                        initAdmin();
+                        progressDialog.dismiss();
+                    } else  if( pacient.getRole().equals("Doctor")) {
+                        loadMenuPacient();
                         initAdmin();
                         progressDialog.dismiss();
                     } else {
@@ -120,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Menu menu = navView.getMenu();
         menu.add(Menu.NONE, MENU_ADMIN_CONFIGURATION, Menu.NONE, "Configuración Bitalino").setIcon(R.drawable.tools);
-        menu.add(Menu.NONE, MENU_ADMIN_SHOW_EVALUACION, Menu.NONE, "Mostrar evaluación").setIcon(R.drawable.evaluation);
+        menu.add(Menu.NONE, MENU_ADMIN_SHOW_EVALUACION, Menu.NONE, "Mostrar Técnicos y Doctores").setIcon(R.drawable.evaluation);
         menu.add(Menu.NONE, MENU_ADMIN_CERRAR_SESSION, Menu.NONE, "Cerrar sesión").setIcon(R.drawable.exit);
         navView.invalidate();
     }
@@ -192,10 +202,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ft.commit();
                 break;
             case MENU_ADMIN_CONFIGURATION:
-                Fragment mFrag1 = new DoctorFragmentView();
+                Fragment mFrag1 = new ConfigurationFragment();
                 FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
                 ft1.replace(R.id.main_fragment, mFrag1);
                 ft1.commit();
+                break;
+            case MENU_ADMIN_SHOW_EVALUACION:
+                Fragment mFrag12 = new PacientMainDoctorFragment();
+                Bundle bundle1=new Bundle();
+                bundle1.putSerializable("PACIENT", pacient);
+                mFrag12.setArguments(bundle1);
+                FragmentTransaction ft12 = getSupportFragmentManager().beginTransaction();
+                ft12.replace(R.id.main_fragment, mFrag12);
+                ft12.commit();
                 break;
             case MENU_ADMIN_CERRAR_SESSION:
                 mAuth.signOut();

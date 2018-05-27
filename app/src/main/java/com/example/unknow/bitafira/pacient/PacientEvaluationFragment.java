@@ -19,7 +19,6 @@ import com.example.unknow.bitafira.R;
 import com.example.unknow.bitafira.model.Evaluation;
 import com.example.unknow.bitafira.model.Pacient;
 import com.example.unknow.bitafira.service.BitalinoService;
-import com.example.unknow.bitafira.service.SampleService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
@@ -42,7 +41,6 @@ public class PacientEvaluationFragment extends Fragment {
     FragmentTransaction t;
     private TextView full, email, rol;
     String id;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_pacient_evaluation, parent, false);
@@ -78,16 +76,7 @@ public class PacientEvaluationFragment extends Fragment {
     private void init() {
 
         if (getArguments() != null) {
-            pacient = new Pacient();
-            pacient.setId(getArguments().getString("PACIENT_ID"));
-            pacient.setName(getArguments().getString("PACIENT_NAME"));
-            pacient.setLastName(getArguments().getString("PACIENT_LASTNAME"));
-            pacient.setPhone(getArguments().getInt("PACIENT_PHONE", 0));
-            pacient.setAddress(getArguments().getString("PACIENT_DIRECCION"));
-            pacient.setRole(getArguments().getString("PACIENT_ROL"));
-            pacient.setPhoneRefe(getArguments().getInt("PACIENT_PHONE_REFE", 0));
-            pacient.setEmail(getArguments().getString("PACIENT_EMAIL"));
-            pacient.setNumberHistory(getArguments().getInt("PACIENT_HISTORIAL", 0));
+            pacient = (Pacient) getArguments().getSerializable("PACIENT");
         }
         full.setText(pacient.getName() + " " + pacient.getLastName());
 
@@ -131,16 +120,4 @@ public class PacientEvaluationFragment extends Fragment {
         txtTime.setText(time);
     }
 
-    public void cancelarProgress() {
-        progressDialog.dismiss();
-    }
-
-    /**
-     * Actualiza en la interfaz de usuario el tiempo cronometrado
-     *
-     * @param tiempo
-     */
-    public void actualizarCronometro(double tiempo) {
-        txtTime.setText(String.format("%.2f", tiempo) + "s");
-    }
 }

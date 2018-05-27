@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.unknow.bitafira.R;
+import com.example.unknow.bitafira.model.EvaluationActive;
 import com.example.unknow.bitafira.model.Event;
 import com.example.unknow.bitafira.model.Pacient;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,7 +38,7 @@ public class PacientEventSaveFragment extends Fragment {
     Pacient pacient;
     Button save, cancelar;
     EditText txtEvent;
-
+    EvaluationActive active;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_pacient_event_save, parent, false);
@@ -53,8 +54,8 @@ public class PacientEventSaveFragment extends Fragment {
         save = (Button) view.findViewById(R.id.btn_save_event);
         cancelar = (Button) view.findViewById(R.id.btn_cancelar_event);
         save.setOnClickListener(saveEvent);
-        pacient = new Pacient();
-        pacient.setId(getArguments().getString("PACIENT_ID"));
+        pacient = (Pacient) getArguments().getSerializable("PACIENT");
+        active = (EvaluationActive) getArguments().getSerializable("EVALUATION");
         mDatabase = FirebaseDatabase.getInstance();
         t = this.getFragmentManager().beginTransaction();//apuntamos con que nodo vamos a trabajar
         mEvents = mDatabase.getReference("events").child(pacient.getId());
@@ -74,13 +75,14 @@ public class PacientEventSaveFragment extends Fragment {
             event.setDate(dateFormat.format(fechaActual));
             event.setHour(hour);
             event.setEvento(txtEvent.getText().toString());
+            event.setIdEvaluation(active.getIdEvaluation());
             mEvents.child(id).setValue(event).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
                         android.support.v4.app.Fragment mFrag = new PacientEventFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putString("PACIENT_ID", pacient.getId());
+                        bundle.putSerializable("PACIENT", pacient);
                         mFrag.setArguments(bundle);
                         t.replace(R.id.main_fragment, mFrag);
                         t.commit();

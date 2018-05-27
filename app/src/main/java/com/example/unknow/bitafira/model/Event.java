@@ -6,6 +6,7 @@ public class Event {
     private String evento;
     private String date;
     private String hour;
+    private String idEvaluation;
 
     public String getId() {
         return id;
@@ -37,5 +38,13 @@ public class Event {
 
     public void setHour(String hour) {
         this.hour = hour;
+    }
+
+    public String getIdEvaluation() {
+        return idEvaluation;
+    }
+
+    public void setIdEvaluation(String idEvaluation) {
+        this.idEvaluation = idEvaluation;
     }
 }
