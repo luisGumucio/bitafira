@@ -2,8 +2,10 @@ package com.example.unknow.bitafira.model;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
+
 @IgnoreExtraProperties
-public class Evaluation {
+public class Evaluation implements Serializable {
 
     private String id;
     private String dateStart;

@@ -18,6 +18,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.unknow.bitafira.R;
+import com.example.unknow.bitafira.doctor.DoctorFragmentView;
+import com.example.unknow.bitafira.doctor.DoctorHistorialFragment;
+import com.example.unknow.bitafira.doctor.EvaluationTimeFragment;
 import com.example.unknow.bitafira.global.Constante;
 import com.example.unknow.bitafira.model.Pacient;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -142,7 +145,7 @@ public class PacientMainFragment extends Fragment {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Bundle bundle=new Bundle();
             bundle.putSerializable("PACIENT", pacients.get(position));
-            Fragment mFrag = new PacientEventFragment();
+            Fragment mFrag = new EvaluationTimeFragment();
             mFrag.setArguments(bundle);
             t.replace(R.id.main_fragment, mFrag).addToBackStack(null);
             t.commit();

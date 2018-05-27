@@ -1,6 +1,89 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    xmlns:ap="http://schemas.android.com/apk/res-auto"
+    >
 
-</LinearLayout>
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="155dp">
+                <LinearLayout
+                    android:background="@drawable/gradientbackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="100dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/foto"/>
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Wiliam Snoe"
+                        android:id="@+id/txt_name_full_info_e"
+                        android:textColor="#fff"
+                        android:textStyle="bold"
+                        android:textSize="21sp"/>
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Wiliam Snoe"
+                        android:id="@+id/txt_email_info_e"
+                        android:textColor="#fff"
+                        android:textStyle="bold"
+                        android:textSize="19sp"/>
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Wiliam Snoe"
+                        android:id="@+id/txt_role_info_e"
+                        android:textColor="#fff"
+                        android:textStyle="bold"
+                        android:textSize="19sp"/>
+                </LinearLayout>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <com.androidplot.xy.XYPlot
+                    style="@style/APDefacto.Dark"
+                    android:id="@+id/plot"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    ap:renderMode="use_background_thread"
+                    ap:title="Evaluacion"
+                    ap:rangeTitle="range"
+                    ap:domainTitle="domain"/>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_evaluations"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:backgroundTint="#da3c2f"
+        fab:fabSize="mini"
+        fab:srcCompat="@drawable/evaluations"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>

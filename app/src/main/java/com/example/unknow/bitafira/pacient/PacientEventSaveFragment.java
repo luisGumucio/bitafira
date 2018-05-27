@@ -1,13 +1,9 @@
 package com.example.unknow.bitafira.pacient;
 
-import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -34,7 +29,7 @@ public class PacientEventSaveFragment extends Fragment {
 
     FirebaseDatabase mDatabase;
     DatabaseReference mEvents;
-    FragmentTransaction t;
+    FragmentTransaction transact;
     Pacient pacient;
     Button save, cancelar;
     EditText txtEvent;
@@ -57,7 +52,7 @@ public class PacientEventSaveFragment extends Fragment {
         pacient = (Pacient) getArguments().getSerializable("PACIENT");
         active = (EvaluationActive) getArguments().getSerializable("EVALUATION");
         mDatabase = FirebaseDatabase.getInstance();
-        t = this.getFragmentManager().beginTransaction();//apuntamos con que nodo vamos a trabajar
+        transact = this.getFragmentManager().beginTransaction();//apuntamos con que nodo vamos a trabajar
         mEvents = mDatabase.getReference("events").child(pacient.getId());
         ;
     }
@@ -84,8 +79,8 @@ public class PacientEventSaveFragment extends Fragment {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("PACIENT", pacient);
                         mFrag.setArguments(bundle);
-                        t.replace(R.id.main_fragment, mFrag);
-                        t.commit();
+                        transact.replace(R.id.main_fragment, mFrag);
+                        transact.commit();
                     }
                 }
             });
