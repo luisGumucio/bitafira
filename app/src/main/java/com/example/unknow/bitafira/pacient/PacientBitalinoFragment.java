@@ -64,6 +64,7 @@ public class PacientBitalinoFragment extends Fragment {
     private TextView full, email, rol, txtTime, txtFile;
     ProgressDialog progressDialog;
     private String id;
+    private String idEvaluationActive;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -145,6 +146,7 @@ public class PacientBitalinoFragment extends Fragment {
                     evaluationActive.setIdPacient(pacient.getId());
                     evaluationActive.setEvaluation(true);
                     dbEvaluationActive.child(idActive).setValue(evaluationActive);
+                    idEvaluationActive = evaluationActive.getId();
                     countDownTimer = new CountDownTimer(3000, 1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
@@ -152,7 +154,8 @@ public class PacientBitalinoFragment extends Fragment {
 
                         @Override
                         public void onFinish() {
-                            getActivity().startService(new Intent(getActivity(), BitafiraService.class));
+                            getActivity().startService(new Intent(getActivity(), BitafiraService.class)
+                                    .putExtra("Evaluation_id", evaluation.getId()));
                         }
                     };
                     countDownTimer.start();
@@ -169,6 +172,11 @@ public class PacientBitalinoFragment extends Fragment {
         }
     };
 
+    public void stopProgress(String evaluation, String idEvaluation) {
+        dbEvaluation.child(idEvaluation).removeValue();
+        dbEvaluationActive.child(evaluation).removeValue();
+        progressDialog.dismiss();
+    }
     public void stopProgress() {
         progressDialog.dismiss();
     }
@@ -214,6 +222,10 @@ public class PacientBitalinoFragment extends Fragment {
 
     public String getIdPacient() {
         return pacient.getId();
+    }
+
+    public String getIdEvaluationActive() {
+        return idEvaluationActive;
     }
 
     public String getTimeEvaluation() {

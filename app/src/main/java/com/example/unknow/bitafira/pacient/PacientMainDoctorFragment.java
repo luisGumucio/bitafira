@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.unknow.bitafira.R;
+import com.example.unknow.bitafira.doctor.DoctorApater;
 import com.example.unknow.bitafira.global.Constante;
 import com.example.unknow.bitafira.model.Pacient;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,7 +40,7 @@ public class PacientMainDoctorFragment extends Fragment {
     ListView listPacients;
     FloatingActionButton btnAgregar;
 
-    PacientAdapter pacientAdapter;
+    DoctorApater pacientAdapter;
     List<Pacient> pacients;
     ValueEventListener mValueListeneroContactos;
     FirebaseDatabase mDatabase;
@@ -59,7 +60,7 @@ public class PacientMainDoctorFragment extends Fragment {
         //init lista contactos
         pacients = new ArrayList<Pacient>();
         // Inicializar el adaptador con la fuente de datos.
-        pacientAdapter = new PacientAdapter(view.getContext().getApplicationContext(), pacients);
+        pacientAdapter = new DoctorApater(view.getContext().getApplicationContext(), pacients);
         //Relacionando la lista con el adaptador
         listPacients.setAdapter(pacientAdapter);
         listPacients.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);

@@ -1,4 +1,4 @@
-package com.example.unknow.bitafira.pacient;
+package com.example.unknow.bitafira.doctor;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,13 +13,9 @@ import com.example.unknow.bitafira.model.Pacient;
 
 import java.util.List;
 
-/**
- * Created by luis_gumucio on 12-04-18.
- */
+public class DoctorApater extends ArrayAdapter<Pacient> {
 
-public class PacientAdapter extends ArrayAdapter<Pacient> {
-
-    public PacientAdapter(Context context, List<Pacient> objects) {
+    public DoctorApater(Context context, List<Pacient> objects) {
         super(context, 0, objects);
     }
 
@@ -39,7 +35,7 @@ public class PacientAdapter extends ArrayAdapter<Pacient> {
 
         // Referencias UI.
         ImageView photo = (ImageView) convertView.findViewById(R.id.fotoContacto);
-        TextView  lastName = (TextView) convertView.findViewById(R.id.txt_last_name_adpater);
+        TextView lastName = (TextView) convertView.findViewById(R.id.txt_last_name_adpater);
         TextView namePacient = (TextView) convertView.findViewById(R.id.txt_name_adpater);
         TextView phonePacient = (TextView) convertView.findViewById(R.id.telefonoContacto);
 
@@ -51,9 +47,8 @@ public class PacientAdapter extends ArrayAdapter<Pacient> {
         // Setup.
         lastName.setText(pacient.getLastName());
         namePacient.setText(pacient.getName());
-        phonePacient.setText(String.valueOf(pacient.getNumberHistory()));
+        phonePacient.setText(pacient.getRole());
 
         return convertView;
     }
 }
-

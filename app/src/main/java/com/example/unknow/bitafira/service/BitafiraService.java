@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -73,6 +75,7 @@ public class BitafiraService extends Service {
     String id;
     String idPacient;
     Thread thread;
+    String idEvaluation;
 
     /**
      * Establece quien va ha recibir las actualizaciones del cronometro
@@ -87,6 +90,7 @@ public class BitafiraService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         id = UPDATE_LISTENER.getIdEvaluation();
         idPacient = UPDATE_LISTENER.getIdPacient();
+        idEvaluation = UPDATE_LISTENER.getIdEvaluationActive();
         dbBitalino = FirebaseDatabase.getInstance().getReference("bitalino").child(idPacient);
         dev = btAdapter.getRemoteDevice(remoteDevice);
         try {
@@ -126,9 +130,11 @@ public class BitafiraService extends Service {
             UPDATE_LISTENER.stopProgress();
             startTimeCodown();
         } catch (Exception e) {
-            bitalino.stop();
-            sock.close();
-            UPDATE_LISTENER.stopProgress();
+            if(bitalino != null) {
+                bitalino.stop();
+                sock.close();
+            }
+            UPDATE_LISTENER.stopProgress(idEvaluation, id);
 
             new AlertDialog.Builder(UPDATE_LISTENER.getContext())
                     .setTitle("Error")
@@ -210,38 +216,25 @@ public class BitafiraService extends Service {
             Message message = new Message();
             message.obj = filename;
             handlerFile.sendMessage(message);
-            ArrayList<Integer> channelList = new ArrayList<Integer>();
-            for (int i = 0; i < 2; i++) {
-                boolean find = false;
-                for (int j = 0; j < BITlog.channels.length; j++) {
-                    if (i == BITlog.channels[j]) {
-                        find = true;
-                        channelList.add(i, Integer.valueOf(i));
-                    }
-                }
-                if (!find) channelList.add(i, null);
-            }
 
-            String line = "#{" + "\"date\": \"" + new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS").format(cDate) + "\", "
-                    + "\"MAC\": \"" + BITlog.MAC + "\", "
-                    + "\"ChannelsOrder\": [\"SeqN\"";
-
-            for (int i = 0; i < 2; i++) {
-                if (channelList.get(i) != null) {
-                    line += ", " + "\t" + "\"Analog" + i + "\"";
-                }
-            }
-
-            line += " ]}\n";
+            String line  = "";
 
             // Select between external or internal memory
             if (true) {
                 try {
+                    int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+                    if (currentapiVersion >= android.os.Build.VERSION_CODES.GINGERBREAD){
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+                    }
                     File sdPath = Environment.getExternalStorageDirectory();  //getExternalStorageDirectory();
                     String directory = "/Bitafira/" + idPacient;
                     File dir = new File(sdPath.getAbsolutePath() + directory);
-                    dir.mkdirs();
+//                    File folder = new File(sdPath.getAbsolutePath() + "/Bitafira");
+//                    folder.mkdir();
 
+                    dir.mkdirs();
+                   // dir.createNewFile();
                     File f = new File(dir, filename);
                     fout = new OutputStreamWriter(new FileOutputStream(f));
 
@@ -287,9 +280,8 @@ public class BitafiraService extends Service {
                                 reading.setTimestamp(current);
                                 reading.setSequence(Integer.valueOf(myBitFrame.getSequence()));
                                 reading.setData(myBitFrame.getAnalog(1));
-                                // dbBitalino.child(idBitalino).setValue(reading);
-                                String line = Integer.valueOf(myBitFrame.getSequence()).toString();
-                                line += "\t" + myBitFrame.getAnalog(1);
+                                //dbBitalino.child(idBitalino).setValue(reading);
+                                String line = String.valueOf(getData(myBitFrame.getAnalog(1)));
                                 line += "\t" + current;
                                 line += "\n";
                                 try {
@@ -307,6 +299,13 @@ public class BitafiraService extends Service {
             }
         };
         thread.start();
+    }
+
+    private BigDecimal getData(int analog) {
+
+        double firstSolution = (double)analog/1024;
+        BigDecimal decimal = BigDecimal.valueOf(((firstSolution - 1d/2) * 3.3)/100);
+        return decimal;
     }
 
     private void closeFile() {

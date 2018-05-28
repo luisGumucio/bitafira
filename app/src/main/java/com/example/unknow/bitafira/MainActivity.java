@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int MENU_ADMIN_CONFIGURATION = 2;
     private static final int MENU_ADMIN_SHOW_EVALUACION = 3;
     private static final int MENU_ADMIN_CERRAR_SESSION = 4;
+    private static final int MENU_ADMIN_SHOW_PACIENT = 5;
     private ArrayList<WeakReference<OnBackClickListener>> backClickListenersList = new ArrayList<>();
     NavigationView navigationView;
     FirebaseDatabase mDatabase;
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Menu menu = navView.getMenu();
         menu.add(Menu.NONE, MENU_ADMIN_CONFIGURATION, Menu.NONE, "Configuración Bitalino").setIcon(R.drawable.tools);
+        menu.add(Menu.NONE, MENU_ADMIN_SHOW_PACIENT, Menu.NONE, "Mostrar Pacientes").setIcon(R.drawable.tools);
         menu.add(Menu.NONE, MENU_ADMIN_SHOW_EVALUACION, Menu.NONE, "Mostrar Técnicos y Doctores").setIcon(R.drawable.evaluation);
         menu.add(Menu.NONE, MENU_ADMIN_CERRAR_SESSION, Menu.NONE, "Cerrar sesión").setIcon(R.drawable.exit);
         navView.invalidate();
@@ -215,6 +217,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 FragmentTransaction ft12 = getSupportFragmentManager().beginTransaction();
                 ft12.replace(R.id.main_fragment, mFrag12);
                 ft12.commit();
+                break;
+            case MENU_ADMIN_SHOW_PACIENT:
+                Fragment mfrag3 = new PacientMainFragment();
+                Bundle bundle12=new Bundle();
+                bundle12.putSerializable("PACIENT", pacient);
+                mfrag3.setArguments(bundle12);
+                FragmentTransaction ft123 = getSupportFragmentManager().beginTransaction();
+                ft123.replace(R.id.main_fragment, mfrag3);
+                ft123.commit();
                 break;
             case MENU_ADMIN_CERRAR_SESSION:
                 mAuth.signOut();
