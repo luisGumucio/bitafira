@@ -7,7 +7,7 @@ public class BITalinoReading {
     private String id;
     private long timestamp;
     private int sequence;
-    private int data;
+    private String data;
 
     public String getId() {
         return id;
@@ -33,11 +33,11 @@ public class BITalinoReading {
         this.sequence = sequence;
     }
 
-    public int getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(int data) {
+    public void setData(String data) {
         this.data = data;
     }
 }

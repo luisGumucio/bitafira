@@ -166,7 +166,7 @@ public class BitalinoService extends Service {
                     reading.setId(idBitalino);
                     reading.setTimestamp(System.currentTimeMillis());
                     reading.setSequence(Integer.valueOf(myBitFrame.getSequence()));
-                    reading.setData(myBitFrame.getAnalog(1));
+
                    // dbBitalino.child(idBitalino).setValue(reading);
                     String line = Integer.valueOf(myBitFrame.getSequence()).toString();
                     line += "\t" + myBitFrame.getAnalog(1);

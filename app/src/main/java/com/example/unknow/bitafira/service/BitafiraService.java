@@ -279,8 +279,8 @@ public class BitafiraService extends Service {
                                 long current = System.currentTimeMillis();
                                 reading.setTimestamp(current);
                                 reading.setSequence(Integer.valueOf(myBitFrame.getSequence()));
-                                reading.setData(myBitFrame.getAnalog(1));
-                                //dbBitalino.child(idBitalino).setValue(reading);
+                                reading.setData(getData(myBitFrame.getAnalog(1)).toString());
+                                dbBitalino.child(idBitalino).setValue(reading);
                                 String line = String.valueOf(getData(myBitFrame.getAnalog(1)));
                                 line += "\t" + current;
                                 line += "\n";

@@ -239,7 +239,7 @@ public class PacientSaveFragment extends Fragment {
             txtNroHistory.setError("El historial clinico es requerido");
             cancel = false;
         }
-        if(TextUtils.isEmpty(phone) || phone.length() >= 8) {
+        if(TextUtils.isEmpty(phone)) {
             txtPhone.setError("El telefono es requerido");
             cancel = false;
         }
